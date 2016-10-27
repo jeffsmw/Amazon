@@ -1,0 +1,48 @@
+<h1><%= @product.title %></h1>
+<h2>
+  <% if @product.user == nil %>
+    <%= 'anonymous' %>
+  <% else %>
+    <%= @product.user.first_name %>
+    <% end %>
+</h2>
+<div><%= @product.description %></div>
+<div>$<%= "#{'%.02f' % @product.price}" %></div>
+<div>
+<% if @product.category == nil  %>
+  <%= 'unknown' %>
+<% else %>
+  <%= @product.category.name %>
+<% end %>
+</div>
+<div><%= link_to "edit", edit_product_path(@product) %>
+<div><%= link_to "delete", product_path(@product),
+                            method: :delete,
+                            data: { confirm: 'Are you sure?' }%>
+<hr>
+<h2>Reviews</h2>
+<%= @review.errors.full_messages.join(', ') %>
+<%= form_for [@product, @review] do |f| %>
+<div>
+    <%= f.label :body %>
+    <%= f.text_area :body %>
+</div>
+<div>
+    <%= f.label :stars %>
+    <%= f.text_field :stars %>
+</div>
+<%= f.submit %>
+<% end %>
+
+<% @product.reviews.each do |rev| %>
+<%= rev.body %> - <%= rev.stars %> -
+  <% if rev.user == nil %>
+    <%= 'anonymous' %>
+  <% else %>
+    <%= rev.user.first_name %>
+  <% end %>
+<%= link_to 'delete', product_review_path(@product, rev),
+                      method: :delete,
+                      data: {confirm: 'Are you sure?' }%>
+<hr>
+<% end %>
